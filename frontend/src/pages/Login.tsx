@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, type Location, useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
 
 interface LoginValues {
   email: string
@@ -21,6 +22,7 @@ function createDemoToken(email: string) {
 export function Login() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { login } = useAuth()
   const {
     register,
     handleSubmit,
@@ -33,7 +35,7 @@ export function Login() {
   }, [location.state])
 
   const onSubmit = handleSubmit(async (values: LoginValues) => {
-    localStorage.setItem('fitmind_token', createDemoToken(values.email))
+    login(createDemoToken(values.email))
     await new Promise((resolve) => setTimeout(resolve, 600))
     navigate(redirectPath, { replace: true })
   })

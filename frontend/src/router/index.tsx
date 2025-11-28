@@ -4,24 +4,20 @@ import { Planner } from '../pages/Planner'
 import { Login } from '../pages/Login'
 import { Register } from '../pages/Register'
 import { ProtectedRoute } from '../components/layout/ProtectedRoute'
+import { AppLayout } from '../components/layout/AppLayout'
 
 export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
   { path: '/register', element: <Register /> },
   {
-    path: '/',
     element: (
       <ProtectedRoute>
-        <Dashboard />
+        <AppLayout />
       </ProtectedRoute>
     ),
-  },
-  {
-    path: '/planner',
-    element: (
-      <ProtectedRoute>
-        <Planner />
-      </ProtectedRoute>
-    ),
+    children: [
+      { index: true, element: <Dashboard /> },
+      { path: '/planner', element: <Planner /> },
+    ],
   },
 ])
