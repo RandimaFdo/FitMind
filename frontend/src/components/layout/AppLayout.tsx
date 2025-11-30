@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
+import { UserCircle2 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 
 function linkClasses({ isActive }: { isActive: boolean }) {
@@ -20,6 +21,17 @@ export function AppLayout() {
             </NavLink>
             <NavLink to="/planner" className={linkClasses}>
               Planner
+            </NavLink>
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                `rounded-full border border-white/10 p-2 transition hover:border-brand-neon hover:text-white ${
+                  isActive ? 'bg-white/10 text-white' : 'text-slate-200'
+                }`
+              }
+              aria-label="Profile"
+            >
+              <UserCircle2 className="h-5 w-5" />
             </NavLink>
             <button
               type="button"
