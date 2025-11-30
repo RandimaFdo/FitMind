@@ -1,4 +1,7 @@
-import { Activity, Apple, HeartPulse, UserCircle2 } from 'lucide-react'
+import { useMemo } from 'react'
+import { Link } from 'react-router-dom'
+import { Activity, Apple, Dumbbell, HeartPulse, UserCircle2 } from 'lucide-react'
+import { useFitness } from '../context/FitnessContext'
 
 const personalInfo = {
   name: 'Jordan Malik',
@@ -38,6 +41,16 @@ const mealPlan = [
 ]
 
 export function Profile() {
+  const { plans, savedPlanIds, routinePlanIds } = useFitness()
+
+  const featuredFitnessPlan = useMemo(() => {
+    if (!plans.length) return undefined
+    const savedPlan = plans.find((plan) => savedPlanIds.includes(plan.id))
+    if (savedPlan) return savedPlan
+    const routinePlan = plans.find((plan) => routinePlanIds.includes(plan.id))
+    return routinePlan ?? plans[0]
+  }, [plans, savedPlanIds, routinePlanIds])
+
   return (
     <div className="space-y-8 px-4 py-8 text-white">
       <section className="rounded-3xl border border-white/5 bg-slate-900/70 p-6 shadow-glow backdrop-blur">
@@ -108,6 +121,63 @@ export function Profile() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="rounded-3xl border border-white/5 bg-slate-900/70 p-6">
+        <header className="flex items-center gap-3">
+          <Dumbbell className="h-6 w-6 text-brand-aqua" />
+          <div>
+            <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Fitness</p>
+            <h2 className="text-2xl font-semibold">Current training focus</h2>
+          </div>
+        </header>
+
+        {featuredFitnessPlan ? (
+          <div className="mt-6 grid gap-6 md:grid-cols-[1.5fr,1fr]">
+            <article className="space-y-4 rounded-2xl border border-white/5 bg-slate-900/60 p-5">
+              <div className="flex flex-wrap items-center gap-3">
+                <p className="rounded-full border border-white/10 px-3 py-1 text-xs uppercase tracking-[0.3em] text-slate-300">
+                  {featuredFitnessPlan.duration}
+                </p>
+                <span className="rounded-full bg-brand-aqua/20 px-3 py-1 text-xs font-semibold text-brand-aqua">
+                  {featuredFitnessPlan.intensity}
+                </span>
+              </div>
+              <h3 className="text-2xl font-semibold">{featuredFitnessPlan.name}</h3>
+              <p className="text-sm text-slate-300">{featuredFitnessPlan.description}</p>
+              <p className="text-xs uppercase tracking-[0.4em] text-slate-500">Focus areas</p>
+              <div className="flex flex-wrap gap-2">
+                {featuredFitnessPlan.focusAreas.map((area) => (
+                  <span key={area} className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-200">
+                    {area}
+                  </span>
+                ))}
+              </div>
+            </article>
+
+            <article className="space-y-4 rounded-2xl border border-white/5 bg-slate-900/60 p-5">
+              <p className="text-xs uppercase tracking-[0.4em] text-slate-500">Suggested kit</p>
+              <ul className="space-y-2 text-sm text-slate-200">
+                {featuredFitnessPlan.equipment.map((item) => (
+                  <li key={item} className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                to="/fitness"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-brand-aqua transition hover:text-white"
+              >
+                Adjust plan
+              </Link>
+            </article>
+          </div>
+        ) : (
+          <div className="mt-6 rounded-2xl border border-dashed border-white/10 p-5 text-sm text-slate-400">
+            No fitness plan selected yet. Head to the <Link to="/fitness" className="text-brand-aqua">Fitness hub</Link> and save a plan to sync it here.
+          </div>
+        )}
       </section>
     </div>
   )

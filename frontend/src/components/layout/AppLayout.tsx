@@ -22,6 +22,9 @@ export function AppLayout() {
             <NavLink to="/planner" className={linkClasses}>
               Planner
             </NavLink>
+            <NavLink to="/fitness" className={linkClasses}>
+              Fitness
+            </NavLink>
             <NavLink
               to="/profile"
               className={({ isActive }) =>
